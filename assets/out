@@ -36,9 +36,9 @@ remotedir=$(jq -r '.params.remotedir // ""' < $payload)
 cd $source
 echo "Uploading files to remote/$remotedir."
 if [ ! -z "$remotedir" ]; then
-  lftp -c "set sftp:auto-confirm yes; open $URL; mkdir -p -f $remotedir; cd $remotedir; mirror -R"
+  lftp -c "set sftp:auto-confirm yes; open $URL; mkdir -p $remotedir; cd $remotedir; mirror -R"
 else
-  lftp -c "set sftp:auto-confirm yes; open $URL; mirror -R $remotedir"
+  lftp -c "set sftp:auto-confirm yes; open $URL; mirror -R"
 fi
 
 # The script must emit the resulting version of the resource.
