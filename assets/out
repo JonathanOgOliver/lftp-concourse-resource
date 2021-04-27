@@ -32,18 +32,12 @@ fi
 remotedir=$(jq -r '.params.remotedir // ""' < $payload)
 
 cd $source
-echo "Connecting to url."
-lftp -e "set sftp:auto-confirm yes; open $URL;"
-if [ ! -z "$remotedir" ]
-  echo "Creating $remotedir"
-  lftp -e "mkdir -p $remotedir"
-  echo "Changing dir to $remotedir"
-  lftp -e "cd $remotedir"
-fi
 echo "Uploading files to remote/$remotedir."
-lftp -c "mirror -R"
-echo "Files uploaded"
-
+if [ ! -z "$remotedir" ]; then
+  lftp -c "set sftp:auto-confirm yes; open $URL; mkdir -p -f $remotedir; cd $remotedir; mirror -R"
+else
+  lftp -c "set sftp:auto-confirm yes; open $URL; mirror -R"
+fi
 
 # The script must emit the resulting version of the resource.
 get_listing
