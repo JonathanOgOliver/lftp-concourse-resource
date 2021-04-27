@@ -3,7 +3,7 @@
 # Input JSON from STDIN
 # {
 #   "params": {
-#     "remotedir:": "/test/"
+#     "remotedir": "/test/"
 #   },
 #   "source": {
 #     "url": "https://download.opensuse.org",
@@ -34,7 +34,9 @@ fi
 files=$(jq -r '.params.files // "*"' < $payload)
 
 cd $source
-lftp -c "set sftp:auto-confirm yes; open $URL; cd $remotedir || {mkdir -p $remotedir; cd $remotedir}; mirror -R"
+lftp -e "set sftp:auto-confirm yes; open $URL;"
+lftp -e "cd $remotedir || {mkdir -p $remotedir; cd $remotedir};"
+lftp -e "mirror -R"
 
 # The script must emit the resulting version of the resource.
 get_listing
