@@ -35,13 +35,13 @@ files=$(jq -r '.params.files // "*"' < $payload)
 
 cd $source
 echo "Connecting to url."
-lftp -c "set sftp:auto-confirm yes; open $URL;"
+lftp -e "set sftp:auto-confirm yes; open $URL;"
 echo "Creating $remotedir"
 lftp -e "mkdir -p $remotedir"
 echo "Changing dir to $remotedir"
 lftp -e "cd $remotedir"
 echo "Uploading files to $remotedir."
-lftp -e "mirror -R"
+lftp -c "mirror -R"
 echo "Files uploaded"
 
 
