@@ -22,6 +22,8 @@ source $(dirname $0)/common.sh
 payload=$(mktemp /tmp/resource-in.XXXXXX)
 cat > $payload <&0
 
+parse_source_config
+
 source=$1
 
 if [ -z "$source" ]; then
@@ -36,7 +38,7 @@ echo "Uploading files to remote/$remotedir."
 if [ ! -z "$remotedir" ]; then
   lftp -c "set sftp:auto-confirm yes; open $URL; mkdir -p -f $remotedir; cd $remotedir; mirror -R"
 else
-  lftp -c "set sftp:auto-confirm yes; open $URL; mirror -R"
+  lftp -c "set sftp:auto-confirm yes; open $URL; mirror -R $remotedir"
 fi
 
 # The script must emit the resulting version of the resource.
